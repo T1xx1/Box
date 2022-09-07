@@ -1,0 +1,96 @@
+@use '../../SasScript/src/ss.scss';
+
+#root > #stats {
+   @include ss.flex(column);
+}
+
+dialog {
+   @include ss.fullscreen;
+
+   :nth-child(1) {
+      @include ss.flex($justify-content: space-between, $align-items: center);
+
+      img {
+         @include ss.imgbutton;
+
+         border: 0;
+      }
+   }
+}
+
+// Components
+.fieldset {
+   @include ss.reset;
+   @include ss.border('inline');
+
+   cursor: text;
+
+   input {
+      @include ss.reset;
+
+      outline: 0;
+      padding: 0 10px 7px;
+      width: 100%;
+   }
+}
+
+// Layout
+#add,
+#edit {
+   @include ss.position(fixed, $bottom: 20px, $left: 20px);
+
+   background-color: ss.$white;
+   box-sizing: content-box;
+   border-radius: 50%;
+   padding: 7px;
+   height: 50px;
+
+   form {
+      @include ss.reset;
+      @include ss.flex(column, $align-items: stretch);
+
+      #del {
+         color: ss.$red;
+      }
+
+      > * {
+         margin-bottom: 15px;
+      }
+   }
+
+   img {
+      height: inherit;
+   }
+}
+
+.box {
+   @include ss.block('blur');
+
+   margin: 0 0 15px 0;
+
+   h2,
+   h4 {
+      margin: 0;
+   }
+
+   .footer {
+      @include ss.flex($justify-content: space-between);
+
+      .badges {
+         @include ss.flex($align-items: center);
+
+         img {
+            height: 16px;
+            margin-right: 3px;
+         }
+
+         span {
+            margin-right: 10px;
+         }
+      }
+   }
+
+   .header {
+      @include ss.flex($justify-content: space-between);
+   }
+}

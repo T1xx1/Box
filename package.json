@@ -1,6 +1,7 @@
 {
    "name": "Box",
-   "version": "0.1.1",
+   "version": "0.1.2",
+   "homepage": "https://t1xx1.github.io/Box",
    "private": true,
    "dependencies": {
       "@testing-library/jest-dom": "^5.16.5",
@@ -13,7 +14,9 @@
    },
    "scripts": {
       "start": "react-scripts start",
-      "build": "react-scripts build"
+      "build": "react-scripts build",
+      "deploy": "gh-pages -d build",
+      "publish": "npm run build && npm run deploy"
    },
    "eslintConfig": {
       "extends": [

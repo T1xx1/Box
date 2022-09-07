@@ -1,7 +1,8 @@
 import eye from '../assets/eye.png';
 import heart from '../assets/heart.png';
 
-import Form from '../layout/form';
+import Form from './form';
+import Info from './info';
 
 export default function Box({ dispatch, id, box }) {
    return (
@@ -22,17 +23,14 @@ export default function Box({ dispatch, id, box }) {
             if (check && !e.hasAttribute('open')) e.showModal();
          }}
          className='box'>
-         <div className='header'>
-            <h2>{box.name}</h2>
-            <h2>{box.price}€</h2>
-         </div>
+         <Info label={box.name}>{box.price}€</Info>
          <div className='footer'>
             <div className='badges'>
                <img
                   src={eye}
-                  alt='Visits: '
+                  alt='Views: '
                />
-               <span>{box.visits}</span>
+               <span>{box.views}</span>
                <img
                   src={heart}
                   alt='Likes: '

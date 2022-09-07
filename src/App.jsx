@@ -2,8 +2,10 @@ import { useEffect, useReducer } from 'react';
 
 import LocalStorage from './snippets/localstorage';
 
-import Box from './layout/box';
-import Form from './layout/form';
+import Info from './components/info';
+
+import Box from './components/box';
+import Form from './components/form';
 
 const storage = new LocalStorage('Box', '1.0', {
    open: {},
@@ -23,7 +25,7 @@ export default function App() {
                      price: parseFloat(action.payload.price) || 0,
                      date: action.payload.date || new Date(),
                      position: action.payload.position || '',
-                     visits: parseInt(action.payload.visits) || 0,
+                     views: parseInt(action.payload.views) || 0,
                      likes: parseInt(action.payload.likes) || 0,
                   },
                },
@@ -53,7 +55,7 @@ export default function App() {
                   ...state.sold,
                   [action.payload]: {
                      ...box,
-                     sold: new Date(),
+                     sale: new Date(),
                   },
                },
             };
@@ -69,33 +71,55 @@ export default function App() {
 
    let stats = new Map();
 
+   stats.set('capital', 0);
+   stats.set('views', 0);
+   stats.set('likes', 0);
+   stats.set('lastSale', 0);
+   stats.set('earnings', 0);
+
    for (let id in value.open) {
       let box = value.open[id];
 
-      stats.set('tot', parseFloat(stats.get('tot') ?? 0 + box.price));
-      stats.set('visits', parseInt(stats.get('visits') ?? 0 + box.visits));
-      stats.set('likes', parseInt(stats.get('likes') ?? 0 + box.likes));
+      stats.set('capital', stats.get('capital') + parseFloat(box.price));
+      stats.set('views', stats.get('views') + parseInt(box.views));
+      stats.set('likes', stats.get('likes') + parseInt(box.likes));
+   }
+
+   for (let id in value.sold) {
+      let box = value.sold[id];
+
+      if (new Date(stats.get('lastSale')) < new Date(box.sale)) stats.set('lastSale', box.sale);
+
+      stats.set('earnings', stats.get('earnings') + parseFloat(box.price));
    }
 
    return (
       <>
          <div id='stats'>
-            <span>Tot {stats.get('tot')}€</span>
-            <span>Visits {stats.get('visits')}</span>
-            <span>Likes {stats.get('likes')}</span>
+            <Info label='Capitale'>{stats.get('capital')}€</Info>
+            <Info label='Visualizzazioni'>{stats.get('views')}</Info>
+            <Info label='Mi piace'>{stats.get('likes')}</Info>
+            {Object.keys(value.sold).length !== 0 && (
+               <>
+                  <Info label='Ultima vendita'>{new Date(stats.get('lastSale')).toISOString().replace('T', ' ').split('.')[0]}</Info>
+                  <Info label='Guadagni'>{stats.get('earnings')}€</Info>
+               </>
+            )}
          </div>
-         <main>
-            {Object.keys(value.open).length === 0
-               ? 'No boxes'
-               : Object.keys(value.open).map(id => (
-                    <Box
-                       dispatch={dispatch}
-                       id={id}
-                       box={value.open[id]}
-                       key={id}
-                    />
-                 ))}
-         </main>
+         {Object.keys(value.open).length === 0 ? (
+            <h3>No boxes...</h3>
+         ) : (
+            <main>
+               {Object.keys(value.open).map(id => (
+                  <Box
+                     dispatch={dispatch}
+                     id={id}
+                     box={value.open[id]}
+                     key={id}
+                  />
+               ))}
+            </main>
+         )}
          <Form dispatch={dispatch} />
       </>
    );

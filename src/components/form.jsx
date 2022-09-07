@@ -7,12 +7,13 @@ import Fieldset from './fieldset';
 export default function Form({ dispatch, id = '', box }) {
    let type = {
       en: id === '' ? 'add' : 'edit',
-      it: id === '' ? 'aggiungi' : 'modifica'
-   }
+      it: id === '' ? 'aggiungi' : 'modifica',
+   };
 
    return (
       <Dialog
          id={type.en}
+         title={type.it}
          icon={plus}
          className='dialog'>
          <form
@@ -26,7 +27,8 @@ export default function Form({ dispatch, id = '', box }) {
                dispatch({
                   type: type.en,
                   payload: {
-                     name: getValue('Nome'),
+                     id: id,
+                     name: getValue('Nome').charAt(0).toUpperCase() + getValue('Nome').slice(1),
                      price: getValue('Prezzo'),
                      date: getValue('Data'),
                      position: getValue('Posizione'),
@@ -36,6 +38,7 @@ export default function Form({ dispatch, id = '', box }) {
                });
 
                e.parentNode.parentNode.close();
+               e.reset();
             }}>
             <Fieldset
                legend='Nome'

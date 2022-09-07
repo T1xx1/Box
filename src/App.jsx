@@ -72,6 +72,7 @@ export default function App() {
    let stats = new Map();
 
    stats.set('capital', 0);
+   stats.set('boxes', 0);
    stats.set('views', 0);
    stats.set('likes', 0);
    stats.set('lastSale', 0);
@@ -81,6 +82,7 @@ export default function App() {
       let box = value.open[id];
 
       stats.set('capital', stats.get('capital') + parseFloat(box.price));
+      stats.set('boxes', stats.get('boxes') + 1);
       stats.set('views', stats.get('views') + parseInt(box.views));
       stats.set('likes', stats.get('likes') + parseInt(box.likes));
    }
@@ -96,9 +98,14 @@ export default function App() {
    return (
       <>
          <div id='stats'>
-            <Info label='Capitale'>{stats.get('capital')}€</Info>
-            <Info label='Visualizzazioni'>{stats.get('views')}</Info>
-            <Info label='Mi piace'>{stats.get('likes')}</Info>
+            {Object.keys(value.open).length !== 0 && (
+               <>
+                  <Info label='Capitale'>{stats.get('capital')}€</Info>
+                  <Info label='Box'>{stats.get('boxes')}</Info>
+                  <Info label='Visualizzazioni'>{stats.get('views')}</Info>
+                  <Info label='Mi piace'>{stats.get('likes')}</Info>
+               </>
+            )}
             {Object.keys(value.sold).length !== 0 && (
                <>
                   <Info label='Ultima vendita'>{new Date(stats.get('lastSale')).toISOString().replace('T', ' ').split('.')[0]}</Info>
@@ -109,16 +116,35 @@ export default function App() {
          {Object.keys(value.open).length === 0 ? (
             <h3>No boxes...</h3>
          ) : (
-            <main>
-               {Object.keys(value.open).map(id => (
-                  <Box
-                     dispatch={dispatch}
-                     id={id}
-                     box={value.open[id]}
-                     key={id}
+            <>
+               <nav>
+                  <input
+                     type='search'
+                     onKeyUp={e => {
+                        e = e.target;
+
+                        document.querySelector('main').childNodes.forEach(box => {
+                           if (box.querySelector('.info :nth-child(1)').innerHTML.toLowerCase().includes(e.value.toLowerCase())) {
+                              box.removeAttribute('hidden');
+                           } else box.setAttribute('hidden', '');
+                        });
+                     }}
+                     placeholder='Cerca una box...'
                   />
-               ))}
-            </main>
+               </nav>
+               <main>
+                  {Object.keys(value.open)
+                     .reverse()
+                     .map(id => (
+                        <Box
+                           dispatch={dispatch}
+                           id={id}
+                           box={value.open[id]}
+                           key={id}
+                        />
+                     ))}
+               </main>
+            </>
          )}
          <Form dispatch={dispatch} />
       </>

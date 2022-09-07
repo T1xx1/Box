@@ -1,7 +1,23 @@
 @use '../../SasScript/src/ss.scss';
 
-#root > #stats {
-   @include ss.flex(column);
+#root {
+   main {
+      @include ss.reset;
+   }
+
+   nav {
+      margin-bottom: 25px;
+
+      > input {
+         width: 100%;
+      }
+   }
+
+   > #stats {
+      @include ss.flex(column);
+
+      margin-bottom: 15px;
+   }
 }
 
 dialog {
@@ -23,7 +39,11 @@ form {
    @include ss.flex(column);
 
    > * {
-      margin-bottom: 15px !important;
+      margin-bottom: 10px !important;
+   }
+
+   > button {
+      margin-top: 7px;
    }
 
    > #del {
@@ -32,7 +52,7 @@ form {
 }
 
 #add {
-   @include ss.position(fixed, $bottom: 20px, $left: 20px);
+   @include ss.position(fixed, $right: 20px, $bottom: 20px);
 
    background-color: ss.$white;
    box-sizing: content-box;
@@ -68,17 +88,17 @@ form {
 
          img {
             height: 16px;
-            margin-right: 3px;
+            margin-right: 3.5px;
          }
 
          span {
-            margin-right: 10px;
+            margin-right: 7.5px;
          }
       }
    }
 
    > .info {
-      font-size: 1.4rem;
+      font-size: 1.25rem;
    }
 }
 
